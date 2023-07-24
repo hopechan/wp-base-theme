@@ -1,0 +1,56 @@
+// stylelint-disable-next-line at-rule-no-vendor-prefix
+@-ms-viewport {
+  // MSIE: Required for IEMobile.
+  width: device-width;
+}
+
+// MSIE: Prevents scrollbar from overlapping content.
+body {
+  -ms-overflow-style: scrollbar;
+
+  // Applies only to the TinyMCE editor
+  &.mce-content-body {
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  min-width: 320px;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+// Required by IE11
+// http://stackoverflow.com/a/20095764
+main {
+  display: block;
+}
+
+.js-focus-visible {
+  /*
+    This will hide the focus indicator if the element receives focus via the mouse,
+    but it will still show up on keyboard focus. (requires focus-visible polyfill)
+    https://github.com/WICG/focus-visible
+  */
+  :focus:not(.focus-visible) {
+    outline: none;
+  }
+
+  // Define a strong focus indicator for keyboard focus.
+  .focus-visible { // stylelint-disable-line rscss/class-format
+    outline: 5px solid #f00;
+  }
+}

@@ -1,0 +1,73 @@
+@use "sass:map";
+@use "../abstracts/functions.scss";
+@use "../abstracts/mixins.scss";
+/* stylelint-disable rscss/class-format, selector-class-pattern */
+
+@each $i in map.keys(functions.get-palette(highlight)) {
+  $highlight: functions.get-palette(highlight, $i);
+
+  .has-#{$i}-color {
+    color: $highlight;
+  }
+}
+
+.wp-block-button {
+  margin-bottom: functions.get-size(element-margin);
+}
+
+// This should match the definitions in button.scss
+// The difference is that Gutenberg allows users to control the text and bg color separately
+.wp-block-button__link {
+  appearance: none;
+  background-color: functions.get-palette(fg);
+  border: solid functions.get-size(border-width) transparent;
+  border-radius: functions.get-size(border-radius);
+  color: functions.get-palette(bg);
+  display: inline-block;
+  font-size: 0.8em;
+  letter-spacing: 0.15rem;
+  max-width: 100%;
+  padding: 0.6em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition-duration: functions.get-duration(medium);
+  transition-property: background-color, color, filter;
+
+  &:focus,
+  &:hover {
+    @include mixins.filter-lighten;
+    text-decoration: none;
+  }
+
+  &:active {
+    @include mixins.filter-darken;
+    text-decoration: none;
+  }
+
+  @each $i in map.keys(functions.get-palette(highlight)) {
+    $highlight: functions.get-palette(highlight, $i);
+
+    &.has-#{$i}-color {
+      background-color: transparent;
+      border-color: $highlight;
+      color: $highlight;
+
+      &:focus,
+      &:hover {
+        background-color: $highlight;
+        color: #fff;
+      }
+
+      &:active {
+        background-color: $highlight;
+        color: #fff;
+      }
+    }
+
+    &.has-#{$i}-background-color {
+      background-color: $highlight;
+      color: #fff;
+    }
+  }
+}

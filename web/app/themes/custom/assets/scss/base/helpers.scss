@@ -1,0 +1,144 @@
+@use "sass:map";
+@use "../abstracts/functions.scss";
+@use "../abstracts/vars";
+@use "~sass-mq/mq" as mq;
+/* stylelint-disable rscss/class-format, rscss/no-descendant-combinator */
+
+/* Disable some stylelint rules because:
+   1. These helpers are used by site editors and we don't need them to learn
+      RSCSS naming conventions to access them.
+   2. Some of these are pulled from Bootstrap, and we want to maintain the
+      names to reference their docs. */
+
+// Hide content but keep it available for screen readers
+._visually-hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+._text-uppercase {
+  text-transform: uppercase !important;
+}
+
+._text-left {
+  text-align: left !important;
+}
+
+._text-center {
+  text-align: center !important;
+}
+
+._text-right {
+  text-align: right !important;
+}
+
+._text-small {
+  font-size: 0.8em !important;
+}
+
+._text-big {
+  font-size: 1.4em !important;
+}
+
+._text-muted {
+  color: functions.get-palette(fg-light) !important;
+}
+
+._text-color-inherit,
+._text-inherit-color {
+  color: inherit !important;
+}
+
+._text-color-white {
+  color: #fff !important;
+}
+
+// Colored text
+@each $i in map.keys(functions.get-palette(highlight)) {
+  ._text-style-#{$i} {
+    color: functions.get-palette(highlight, $i) !important;
+  }
+}
+
+/* Borders, margins, and paddings
+   Generates borders, margin, and padding classes in all directions
+   Borders will always use border-width from vars.scss
+   Paddings and margins will always be a multiple of element-margin in vars.scss
+
+   ._mb-2 -> Double bottom margin
+   ._pl-4 -> Quad left padding
+   ._bl -> Border left
+ */
+
+$sizes: (
+  (0, (functions.get-size(element-margin) * 0)),
+  (half, (functions.get-size(element-margin) * 0.5)),
+  (1, (functions.get-size(element-margin) * 1)),
+  (2, (functions.get-size(element-margin) * 2)),
+  (3, (functions.get-size(element-margin) * 3)),
+  (4, (functions.get-size(element-margin) * 4))
+);
+
+$directions: ((b, bottom), (l, left), (r, right), (t, top));
+
+@each $dir-key, $dir in $directions {
+  ._b#{$dir-key} {
+    border-#{$dir}: solid
+      functions.get-size(border-width)
+      functions.get-palette(border);
+  }
+
+  @each $size-key, $size in $sizes {
+    ._p#{$dir-key}-#{$size-key} {
+      padding-#{$dir}: $size !important;
+    }
+    ._m#{$dir-key}-#{$size-key} {
+      margin-#{$dir}: $size !important;
+    }
+  }
+}
+
+// Responsive floats
+// TODO: Test if this replaces succesfully the old version
+@each $breakpointName, $breakpointValue in vars.$mq-breakpoints {
+  @include mq.mq($from: $breakpointValue) {
+    @each $value in (none, left, right) {
+      ._float-#{$value}-#{$breakpointValue} {
+        float: $value !important;
+      }
+    }
+    @each $val in (none, block, flex) {
+      ._display-#{$val}-#{$breakpointValue} {
+        display: $val !important;
+      }
+    }
+  }
+}
+// OLD CODE VERSION
+// @each $size in map.keys(vars.$mq-breakpoints) {
+//   @include mq.mq($from: $size) {
+//     @each $value in (none, left, right) {
+//       ._float-#{$value}-#{$size} {
+//         float: $value !important;
+//       }
+//     }
+//   }
+// }
+
+// Responsive display helpers
+
+// @each $size in map.keys(vars.$mq-breakpoints) {
+//   @include mq($from: $size) {
+//     @each $value in (none, block, flex) {
+//       ._display-#{$value}-#{$size} {
+//         display: $value !important;
+//       }
+//     }
+//   }
+// }

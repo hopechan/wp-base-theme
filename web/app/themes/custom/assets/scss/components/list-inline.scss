@@ -1,0 +1,35 @@
+/* stylelint-disable max-nesting-depth */
+@use "../abstracts/functions.scss";
+$spacing: functions.get-size(element-margin) * 0.5;
+
+.list-inline {
+  list-style: none;
+  margin-bottom: $spacing;
+  padding-left: 0;
+
+  > li {
+    display: inline-block;
+    margin: 0 $spacing $spacing 0;
+    padding: 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &.-separated {
+    > li {
+      &::after {
+        content: '|';
+        display: inline-block;
+        margin-left: $spacing;
+      }
+
+      &:last-child {
+        &::after {
+          display: none;
+        }
+      }
+    }
+  }
+}

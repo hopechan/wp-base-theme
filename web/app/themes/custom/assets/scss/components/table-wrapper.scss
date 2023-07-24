@@ -1,0 +1,78 @@
+/* stylelint-disable rscss/no-descendant-combinator, max-nesting-depth */
+@use "../abstracts/functions.scss";
+
+.table-wrapper {
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+
+  table {
+    margin: 0 0 functions.get-size(element-margin) 0;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border-color: functions.get-palette(border);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  th {
+    font-size: 0.9rem;
+    font-weight: functions.get-font(weight-bold);
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  &.-bordered-horizontal {
+    td,
+    th {
+      border-width: 0 0 functions.get-size(border-width);
+      padding: 0.75rem;
+    }
+
+    &:not(.-striped) {
+      td,
+      th {
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+
+  &.-bordered-full {
+    border-collapse: separate;
+
+    table {
+      border-left: solid functions.get-size(border-width) functions.get-palette(border);
+      border-top: solid functions.get-size(border-width) functions.get-palette(border);
+    }
+
+    td,
+    th {
+      border-width: 0 functions.get-size(border-width) functions.get-size(border-width);
+      padding: 0.75rem;
+    }
+  }
+
+  &.-striped {
+    tbody {
+      tr:nth-child(odd) {
+        background-color: get-palette(border-bg);
+      }
+    }
+  }
+
+  &.-compact {
+    td,
+    th {
+      padding: 0.35rem;
+    }
+  }
+}

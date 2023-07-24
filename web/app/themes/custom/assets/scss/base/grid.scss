@@ -1,0 +1,43 @@
+@use "sass:map";
+@use "../abstracts/grid";
+@use "../abstracts/functions.scss";
+@use "../abstracts/vars.scss";
+@use "~sass-mq/mq" as mq;
+/* stylelint-disable rscss/class-format */
+
+/* Disable RSCSS checks to comply with Bootstrap's conventions */
+
+.container {
+  @include grid.grid-container;
+
+  &.-medium {
+    max-width: (functions.get-size(container) * 0.85);
+  }
+
+  &.-narrow {
+    max-width: (functions.get-size(container) * 0.6);
+  }
+}
+
+.row {
+  @include grid.grid-row;
+}
+
+.container-row {
+  @include grid.grid-container-row;
+}
+
+// Make all columns in all viewports
+@each $breakpointName, $breakpointValue in vars.$mq-breakpoints {
+  @for $i from 1 through functions.get-misc(columns) {
+    .col-#{$breakpointName}-#{$i} {
+      // Basic styles that all columns should have on all viewports.
+      @include grid.grid-col-gutter;
+      width: 100%; // Start being 100% wide, individual breakponts will clamp the width
+
+      @include mq.mq($from: $breakpointValue) {
+        @include grid.grid-col-width($i);
+      }
+    }
+  }
+}

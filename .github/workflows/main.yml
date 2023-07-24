@@ -1,0 +1,57 @@
+name: Build and deploy
+
+on: [push]
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Test frontend
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer:v1
+          extensions: exif, mbstring, imagick, gd
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Test backend
+        run: |
+          composer install
+        env:
+          ACF_PRO_KEY: ${{ secrets.ACF_PRO_KEY }}
+
+  deploy:
+    needs: [test-frontend, test-backend]
+    if: github.ref == 'refs/heads/master' # Runs on master only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Deploy
+        uses: idoberko2/dokku-deploy-github-action@v1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+          dokku-host: ${{ secrets.DOKKU_HOST }}
+          app-name: ${{ secrets.DOKKU_APP }}
+          git-push-flags: '--force'

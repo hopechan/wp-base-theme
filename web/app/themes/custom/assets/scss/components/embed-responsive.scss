@@ -1,0 +1,56 @@
+/* Responsive embeds (thanks Bootstrap 4!)
+  https://github.com/twbs/bootstrap/blob/6a5a83e02c336f6ba73a5dc5cd4cb28cc2f8f497/scss/_responsive-embed.scss
+
+  Available in Bootstrap style:
+  class="embed-responsive embed-responsive-16by9"
+
+  And RSCSS variant style:
+  class="embed-responsive -w16h9"
+*/
+@use "sass:math";
+
+$ratios: (
+  (21, 9),
+  (16, 9),
+  (4, 3),
+  (1, 1)
+);
+
+.embed-responsive {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 100%;
+
+  &::before {
+    content: '';
+    display: block;
+  }
+
+  .item,
+  .embed-responsive-item,
+  .mce-object,
+  iframe,
+  embed,
+  object,
+  video {
+    border: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  @each $w, $h in $ratios {
+    // stylelint-disable-next-line rscss/class-format
+    &.-w#{$w}h#{$h},
+    &.embed-responsive-#{$w}by#{$h} {
+      &::before {
+        padding-top: math.percentage(math.div($h, $w));
+      }
+    }
+  }
+}

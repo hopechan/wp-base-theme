@@ -1,0 +1,92 @@
+@use "sass:map";
+@use "../abstracts/functions.scss";
+@use "../abstracts/mixins.scss";
+
+button,
+[type="submit"],
+[type="reset"] {
+  cursor: pointer;
+}
+
+// stylelint-disable-next-line rscss/class-format
+.button {
+  appearance: none;
+  background-color: transparent;
+  border: solid functions.get-size(border-width) currentColor;
+  border-radius: functions.get-size(border-radius);
+  color: inherit;
+  display: inline-block;
+  font-size: 0.8em;
+  letter-spacing: 0.15rem;
+  max-width: 100%;
+  padding: 0.6em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition-duration: functions.get-duration(medium);
+  transition-property: background-color, color, filter;
+
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: functions.get-palette(border-bg);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &.-alt {
+    background-color: functions.get-palette(fg);
+    border-color: functions.get-palette(fg);
+    color: functions.get-palette(bg);
+  }
+
+  &.-small {
+    font-size: 0.6em;
+  }
+
+  &.-big {
+    font-size: 1em;
+  }
+
+  &.-disabled,
+  &.disabled,
+  &:disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  > svg {
+    margin-right: 0.25rem;
+  }
+
+  // Create all color variations
+  /* stylelint-disable max-nesting-depth */
+  @each $i in map.keys(functions.get-palette(highlight)) {
+    $highlight: functions.get-palette(highlight, $i);
+
+    &.-style-#{$i} {
+      background-color: transparent;
+      border-color: $highlight;
+      color: $highlight;
+
+      &:focus,
+      &:hover {
+        @include mixins.filter-lighten;
+        background-color: $highlight;
+        color: #fff;
+      }
+
+      &:active {
+        @include mixins.filter-darken;
+        background-color: $highlight;
+        color: #fff;
+      }
+
+      &.-alt {
+        background-color: $highlight;
+        color: #fff;
+      }
+    }
+  }
+  /* stylelint-enable */
+}
